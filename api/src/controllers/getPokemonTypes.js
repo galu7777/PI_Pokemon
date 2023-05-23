@@ -1,6 +1,6 @@
 require('dotenv').config();
 const axios = require("axios");
-const { URL } = process.env;
+const { URL_TYPE } = process.env;
 const { Type } = require("../db");
 
 
@@ -8,7 +8,7 @@ const getPokemonTypes = async (req, res) => {
   try {
     const type = await Type.findAll()
     if(type.length === 0){
-      const data = await axios(URL)
+      const data = await axios(URL_TYPE)
       const Types = data.data.results.map((type) => {
         return { name: type.name }
       })

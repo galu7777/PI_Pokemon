@@ -13,13 +13,20 @@ const getPokemonByName = async (req, res) => {
 
       const nameMin = name.toLowerCase();
       const pokeFilterOut = resApi.filter((poke) => poke.name.toLowerCase().startsWith(nameMin))
-      const pokeFound = pokeFilterOut.map(({name, url}) => {
+      const pokeFound = await Promise.all(pokeFilterOut.map(async({name, url}) => {
         const urlParts = url.split('/');
         const id = urlParts[urlParts.length - 2];
         const image = `${URL_IMAGE}/${id}.png`;
-      
-        return { id, name, image }
-      })
+
+        const pokemonDetails = await axios.get(`${URL}/${id}`);
+        const { types } = pokemonDetails.data;
+        const TP = types.map(({ type }) => ({
+          name: type.name,
+          typeNumber: Number(type.url.match(/\/(\d+)\/$/)[1])
+        }));
+
+        return { id, name, image, types: TP};
+      }))
       if(pokeFilterOut.length > 0) return res.status(200).json(pokeFound)
       else {
         const pokemonDB = await Pokemon.findAll({

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const axios = require("axios");
+const { Op } = require('sequelize');
 const { URL, URL_IMAGE } = process.env;
 const { Pokemon, Type } = require('../db');
 
@@ -7,30 +8,43 @@ const { Pokemon, Type } = require('../db');
 const getPokemon = async (req, res) => {
   try {
     /// respuesta de la Api
-    const data = await axios(URL)
-    const resApi = data.data.results;
+    const apiResponse = await axios.get(URL);
+    const apiResults = apiResponse.data.results;
 
-    const pokemonsApi = resApi.map(({name, url}) => {
+    const pokemonsApi = await Promise.all(apiResults.map(async ({ name, url }) => {
       const urlParts = url.split('/');
       const id = urlParts[urlParts.length - 2];
       const image = `${URL_IMAGE}/${id}.png`;
-      
-      return { id, name, image }
-    })
-    
-    // Respuesta de la DB
+
+      const pokemonDetails = await axios.get(`${URL}/${id}`);
+      const { types } = pokemonDetails.data;
+      const TP = types.map(({ type }) => ({
+        name: type.name,
+        typeNumber: Number(type.url.match(/\/(\d+)\/$/)[1])
+      }));
+
+      return { id, name, image, types: TP};
+    }));
+
+    // Respuesta de la base de datos
     const allPokemons = await Pokemon.findAll({
       include: Type
-    })
+    });
 
-    const pokemonsDB = allPokemons.map(({ id, name, image }) => {
-      return { id, name, image }
-    })
+    const pokemonsDB = allPokemons.map(({ id, name, image, Types }) => ({
+      id,
+      name,
+      image,
+      types: Types.map(({ id, name }) => ({
+        id,
+        name
+      }))
+    }));
 
-    //Destructuring de los 2 array
-    const allPoke = [...pokemonsDB, ...pokemonsApi ]
-    return res.status(200).json(allPoke)
-    
+    // Destructuración de los 2 arrays
+    const allPoke = [...pokemonsDB, ...pokemonsApi];
+    return res.status(200).json(allPoke);
+
   } catch (error) {
     res.status(404).send({ message: error.message });
   }
@@ -40,7 +54,7 @@ const getPokemonById = async (req, res) => {
   const { id } = req.params;
 
   try {
-   
+
     if(id.length < 5){
       const data = await axios(`${URL}/${id}`)
       const { name, stats, height, weight, types } = data.data;
@@ -85,10 +99,10 @@ const getPokemonById = async (req, res) => {
         },
         include: Type
       })
-     
+
       return res.status(200).json(pokemonDB)
-    }   
-      
+    }
+
   } catch (error) {
     res.status(404).send({ message: error.message });
   }

@@ -1,0 +1,28 @@
+.card {
+    background-color: #fff ;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    height: 15%;
+    width: 25%;
+  }
+  
+  .image-container {
+    height: 25%;
+    width: 35%;
+  }
+  
+  .card-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .card-content {
+    flex-grow: 1;
+    margin-left: 16px;
+  }
+  

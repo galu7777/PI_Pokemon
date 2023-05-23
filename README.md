@@ -211,9 +211,9 @@ Se debe desarrollar una aplicación utilizando **React** y **Redux** que conteng
 -  Imagen.
 -  Vida.
 -  Ataque.
--  Defensa.
--  Velocidad (si tiene).
--  Altura (si tiene).
+-  Defeidad (si tiene).
+-  Alturnsa.
+-  Veloca (si tiene).
 -  Peso (si tiene).
 -  Tipo.
 

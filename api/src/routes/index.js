@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { getPokemon, getPokemonById, getPoke} = require('../controllers/getPokemonById');
+const { getPokemon, getPokemonById } = require('../controllers/getPokemonById');
 const { getPokemonByName } = require("../controllers/getPokemonByName");
 const { getPokemonTypes } = require("../controllers/getPokemonTypes");
 const { postPokemon } = require("../controllers/postPokemon");
@@ -8,13 +8,9 @@ const { postPokemon } = require("../controllers/postPokemon");
 // const router = Router();
 
 // Configurar los routers
-router.get("/", (req, res) => {
-  getPokemon(req, res);
-});
+router.get("/", getPokemon);
 
-router.get("/type", (req, res) => {
-  getPokemonTypes(req, res);
-});
+router.get("/type", getPokemonTypes);
 
 router.get("/search", (req, res) => {
   getPokemonByName(req, res);
