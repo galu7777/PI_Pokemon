@@ -1,0 +1,140 @@
+.create-pokemon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  margin-left: 15%;
+}
+  .cnt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .create-pokemon-form {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(110, 96, 96, 0.8);
+    box-shadow: 0 8px 32px 0 #f17752;
+    margin-top: 3%;
+  }
+
+  .ctn-checkbox {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 4%;
+  }
+
+  .ctn-checkbox > * {
+    flex-basis: 20%; /* Ancho de cada columna (20% para 5 columnas) */
+    box-sizing: border-box;
+  }
+
+  .ctn-input {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 4%;
+    margin-bottom: 4%;
+  }
+
+  .ctn-input > * {
+    flex-basis: 20%;
+    box-sizing: border-box;
+  }
+
+  .top-label {
+    position: absolute;
+    pointer-events: none;
+    left: 10px;
+    transition: 0.2s ease-out;
+    color: white;
+    font-size: 12px;
+  }
+  
+  .input-container {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .label-check {
+    font-size: 19px;
+    color: #fff; 
+  }
+
+  .ctn-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+  }
+
+.btn-landing{
+    position: relative;
+    background: #fff;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+    padding: 10px 30px;
+    transition: 0.5s;
+  }
+  
+  .btn-landing:hover{
+    background: #f17752;
+    color: #f17752;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    box-shadow: 0 0 35px #f17752;
+  }
+  
+  .btn-landing:before{
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: #27282c;
+  }
+
+  button span {
+    position: relative;
+    z-index: 1;
+  }
+  
+  button i{
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  
+  button i::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 80%;
+    width: 10px;
+    height: 4px;
+    background-color: #27282c;
+    transform: translateX(-50%) skewX(325deg);
+    transition: 0.5s;
+  }
+  
+  button:hover i::before{
+    width: 20%;
+    left: 20%;
+  }
+  
+  button i::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    width: 10px;
+    height: 4px;
+    background-color: #27282c;
+    transform: translateX(-50%) skewX(325deg);
+    transition: 0.5s;
+  }
+  
+  button:hover i::after{
+    width: 20%;
+    left: 80%;
+  }

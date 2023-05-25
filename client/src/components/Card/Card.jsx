@@ -11,11 +11,11 @@ function Card({ id, name, image, types }) {
       </div>
       <div className="card-content">
         <NavLink to={`/detail/${id}`} element={<Detail/>}>
-            <h3>{name}</h3>
+            <h3 style={{ color: 'white' }}>{name}</h3>
         </NavLink>
         {
             types.map((type) => {
-                return <h5 key={type.name}>Type: {type.name}</h5>;
+                return <h5 key={type.name} style={{ color: 'red' }}>Type: <span style={{ color: 'white' }}>{type.name}</span></h5>;
             })
         }
       </div>

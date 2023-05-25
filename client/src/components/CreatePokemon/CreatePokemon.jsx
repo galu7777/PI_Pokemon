@@ -1,210 +1,235 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { createPokemons, getAllTypes } from "../../redux/actions";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPokemons, getAllTypes } from '../../redux/actions';
+import './CreatePokemon.css';
 
 function CreatePokemon() {
-   
   const [newPokemon, setNewPokemon] = useState({
-    name: "",
-    image: "",
-    life: 0,
-    attack: 0,
-    defense: 0,
-    speed: 0,
-    height: 0,
-    weight: 0,
-    types: [],
+    name: '',
+    image: '',
+    life: null,
+    attack: null,
+    defense: null,
+    speed: null,
+    height: null,
+    weight: null,
+    id_Type: [],
   });
+  const [error, setError] = useState('');
 
-   const handleChangeName = (e) => {
+  const handleChangeName = (e) => {
     setNewPokemon({ ...newPokemon, name: e.target.value });
-   }
+  };
 
-   const handleChangeImage = (e) => {
+  const handleChangeImage = (e) => {
     setNewPokemon({ ...newPokemon, image: e.target.value });
-   }
+  };
 
-   const handleChangeLife = (e) => {
+  const handleChangeLife = (e) => {
     setNewPokemon({ ...newPokemon, life: e.target.value });
-   }
+  };
 
-   const handleChangeAttack = (e) => {
+  const handleChangeAttack = (e) => {
     setNewPokemon({ ...newPokemon, attack: e.target.value });
-   }
+  };
 
-   const handleChangeDefense = (e) => {
+  const handleChangeDefense = (e) => {
     setNewPokemon({ ...newPokemon, defense: e.target.value });
-   }
+  };
 
-   const handleChangeSpeed = (e) => {
+  const handleChangeSpeed = (e) => {
     setNewPokemon({ ...newPokemon, speed: e.target.value });
-   }
+  };
 
-   const handleChangeHeight = (e) => {
+  const handleChangeHeight = (e) => {
     setNewPokemon({ ...newPokemon, height: e.target.value });
-   }
-   
-   const handleChangeWeight = (e) => {
+  };
+
+  const handleChangeWeight = (e) => {
     setNewPokemon({ ...newPokemon, weight: e.target.value });
-   }
+  };
 
-   const handleChangeTypes = (e) => {
-    const typeId = e.target.value;
-    const typeName = e.target.name;
+  const handleChangeTypes = (e) => {
+    const selectedType = parseInt(e.target.value);
+    const isChecked = e.target.checked;
 
-    if(e.target.checked) {
-      setNewPokemon({ ...newPokemon, types: [...newPokemon.types, { id: typeId, name: typeName }] });
+    if (isChecked) {
+      if (newPokemon.id_Type.length < 2) {
+        setNewPokemon((prevState) => ({
+          ...prevState,
+          id_Type: [...prevState.id_Type, selectedType],
+        }));
+        setError('');
+      } else {
+        e.target.checked = false;
+        setError('Solo se pueden seleccionar 2 tipos máximo');
+      }
     } else {
-      setNewPokemon({...newPokemon.types.filter((type) => type.id !== typeId)})
+      setNewPokemon((prevState) => ({
+        ...prevState,
+        id_Type: prevState.id_Type.filter((type) => type !== selectedType),
+      }));
+      setError('');
     }
-   }
+  };
 
-   const submitHandler = () => {
-    const pokemonToCreate = {
-      ...newPokemon,
-      name: newPokemon.name.trim(),
-      types: newPokemon.types.map((type) => Number(type.id))
-    }
-    dispatch(createPokemons(pokemonToCreate))
-    setNewPokemon({
-      name: "",
-      image: "",
-      life: 0,
-      attack: 0,
-      defense: 0,
-      speed: 0,
-      height: 0,
-      weight: 0,
-      types: [],
-    })
-    navigate('/')
-   }
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    // Validar el campo 'numbers'
+    dispatch(createPokemons(newPokemon));
+    navigate('/');
+  };
 
-   const dispatch = useDispatch();
-   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    // Get all Types
-    const allTypes = useSelector((state) => state.types);
-    useEffect(() => {
-        !allTypes.length && dispatch(getAllTypes());
-    }, [dispatch]);
-    
+  // Get all Types
+  const allTypes = useSelector((state) => state.types);
+  useEffect(() => {
+    !allTypes.length && dispatch(getAllTypes());
+  }, [dispatch]);
+
   return (
-    <div>
-        <h1 style={{ color: 'white' }}>Create Pokemon</h1>
-        <form onSubmit={submitHandler}>
-            <label htmlFor="name">Name: </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Pikachu"
-              value={newPokemon.name}
-              onChange={handleChangeName}
-              autoFocus 
-            />
-
-            <label htmlFor="life">life: </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              value={newPokemon.life}
-              onChange={handleChangeLife}
-              autoFocus 
-             />
+    <div className="create-pokemon-container">
+      <div className='cnt'>
+        <h1 style={{ color: 'white' }}>Create <span style={{ color: 'red' }}>Pokemon</span></h1>
+        <form onSubmit={submitHandler} className="create-pokemon-form">
+          
+          <div className='ctn-input'>
             
-            <label htmlFor="image">image: </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              value={newPokemon.image}
-              onChange={handleChangeImage}
-              autoFocus 
-            />
+            
+              <div className='input-container'>
+                <label htmlFor="name" className='top-label'>Name: </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Pikachu"
+                  value={newPokemon.name}
+                  onChange={handleChangeName}
+                  className="input"
+                  autoFocus
+                />
+              </div>
+            
+            <div className='input-container'>
+              <label htmlFor="image" className="top-label">Image: </label>
+              <input
+                type="text"
+                id="image"
+                name="image"
+                value={newPokemon.image}
+                onChange={handleChangeImage}
+                className="input"
+                autoFocus
+              />
+            </div>
 
-            <label htmlFor="attack">attack: </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              value={newPokemon.attack}
-              onChange={handleChangeAttack}
-              autoFocus 
-            />
+            <div className='input-container'>
+              <label htmlFor="life" className="top-label">Life: </label>
+              <input
+                type="number"
+                id="life"
+                name="life"
+                value={newPokemon.life}
+                onChange={handleChangeLife}
+                className="input"
+                autoFocus
+              />
+            </div>
 
-            <label htmlFor="defense">defense: </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              value={newPokemon.defense}
-              onChange={handleChangeDefense}
-              autoFocus
-            />
+            <div className='input-container'>
+              <label htmlFor="attack" className="top-label">Attack: </label>
+              <input
+                type="number"
+                id="attack"
+                name="attack"
+                value={newPokemon.attack}
+                onChange={handleChangeAttack}
+                className="input"
+                autoFocus
+              />
+            </div>
 
-            <label htmlFor="speed">Speed </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              value={newPokemon.speed}
-              onChange={handleChangeSpeed}
-              autoFocus
-             />
+            <div className='input-container'>
+              <label htmlFor="defense" className="top-label">Defense: </label>
+              <input
+                type="number"
+                id="defense"
+                name="defense"
+                value={newPokemon.defense}
+                onChange={handleChangeDefense}
+                className="input"
+                autoFocus
+              />
+            </div>
 
-            <label htmlFor="height">Height: </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              value={newPokemon.height}
-              onChange={handleChangeHeight}
-              autoFocus
-            />
+            <div className='input-container'>
+              <label htmlFor="speed" className="top-label">Speed </label>
+              <input
+                type="number"
+                id="speed"
+                name="speed"
+                value={newPokemon.speed}
+                onChange={handleChangeSpeed}
+                autoFocus
+                className="input"
+              />
+            </div>
 
-            <label htmlFor="weight">Weight: </label>
-            <input 
-              type="text"
-              id="name"
-              name="name"
-              value={newPokemon.weight}
-              onChange={handleChangeWeight}
-              autoFocus
-            />
+            <div className='input-container'>
+              <label htmlFor="height" className="top-label">Height: </label>
+              <input
+                type="number"
+                id="height"
+                name="height"
+                value={newPokemon.height}
+                onChange={handleChangeHeight}
+                className="input"
+                autoFocus
+              />
+            </div>
 
+            <div className='input-container'>
+              <label htmlFor="weight" className="top-label">Weight: </label>
+              <input
+                type="number"
+                id="weight"
+                name="weight"
+                value={newPokemon.weight}
+                onChange={handleChangeWeight}
+                className="input"
+                autoFocus
+              />
+            </div>
+          </div>
+
+          <div className='ctn-checkbox'>
             {
-              allTypes.length ? (
-                  <div>
-                    {
-                      allTypes.length &&
-                        allTypes.map((type) => (
-                          <div key={type.id}>
-                            <label>
-                              <input 
-                                type="checkbox"
-                                id={type.id}
-                                value={type.id}
-                                name={type.name}
-                                onChange={handleChangeTypes}
-                              />
-                            </label>
-                          </div> 
-                        ))
-                    }
-                  </div>
-              ) : (
-                <div>
-                  <span>Error</span>
+              allTypes.map((type) => (
+                <div key={type.id} style={{ marginBottom: '4px' }}>
+                  <input
+                    type="checkbox"
+                    id={`type-${type.id}`}
+                    name={`type-${type.id}`}
+                    value={type.id}
+                    checked={newPokemon.id_Type.includes(type.id)}
+                    onChange={handleChangeTypes}
+                  />
+                  <label htmlFor={`type-${type.id}`} className="label-check">{type.name}</label>
                 </div>
-              )
+              ))
             }
-            <button>
-              create
-            </button>
+          </div>
+          
+          {error && <p>{error}</p>}
+
+          <div className='ctn-button'>
+            <button type="submit" className='btn-landing'><span>Create</span><i></i></button>
+          </div>
         </form>
+      </div>
     </div>
   );
 }

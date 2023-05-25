@@ -1,45 +1,52 @@
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { getAllPokemons } from '../../redux/actions';
 import Card from '../Card/Card';
 import './Pokemons.css';
 
-function Pokemons() {
-  const [pokemons, setPokemons] = useState([]);
+function Pokemons({ pokemons, getAllPokemons }) {
 
+  
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get('http://localhost:3001/pokemon');
-        const data = response.data;
-        setPokemons(data);
-        console.log(pokemons);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
+    getAllPokemons();
+  }, [getAllPokemons]);
 
-    fetchData();
-  }, []); // El arreglo de dependencias está vacío para que se ejecute solo una vez al cargar el componente.
 
   return (
 
-    <div className='card-container'>
-      
-      {
-        pokemons.map((pokemon) => {
-          return (
-            <Card
-              key={pokemon?.id}
-              id={pokemon?.id}
-              name={pokemon?.name}
-              image={pokemon?.image}
-              types={pokemon?.types}
-            />
-          )
-        })
-      }
+    <div className='container'>
+      <h1 style={{ color: 'white' }}>Home <span style={{ color: 'red' }}>Page</span></h1>
+      <div className='card-container'>
+
+          {
+            pokemons && pokemons.map((pokemon) => {
+              return (
+                <Card
+                  key={pokemon?.id}
+                  id={pokemon?.id}
+                  name={pokemon?.name}
+                  image={pokemon?.image}
+                  types={pokemon?.types}
+                />
+              )
+            })
+          }
+
+      </div>
     </div>
   );
 }
 
-export default Pokemons;
+const mapStateToProps = (state) => {
+  return {
+    pokemons: state.allPokemons,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllPokemons: () => dispatch(getAllPokemons()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Pokemons);

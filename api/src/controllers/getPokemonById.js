@@ -6,9 +6,11 @@ const { Pokemon, Type } = require('../db');
 
 
 const getPokemon = async (req, res) => {
+  const { offset, limit } = req.query;
+  console.log(limit)
   try {
     /// respuesta de la Api
-    const apiResponse = await axios.get(URL);
+    const apiResponse = await axios.get(`${URL}?offset=${offset}&limit=${limit}`);
     const apiResults = apiResponse.data.results;
 
     const pokemonsApi = await Promise.all(apiResults.map(async ({ name, url }) => {
@@ -42,7 +44,7 @@ const getPokemon = async (req, res) => {
     }));
 
     // Destructuración de los 2 arrays
-    const allPoke = [...pokemonsDB, ...pokemonsApi];
+    const allPoke = [ ...pokemonsDB, ...pokemonsApi];
     return res.status(200).json(allPoke);
 
   } catch (error) {

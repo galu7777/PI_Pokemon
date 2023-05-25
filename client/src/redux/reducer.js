@@ -1,7 +1,9 @@
-import { CREATE_POKE, GET_ALL_TYPES } from "./actions-types";
+import { CREATE_POKE, GET_ALL_POKE, GET_ALL_TYPES } from "./actions-types";
 
 
 const stateInitial = {
+    page: 12,
+    allPokemons: [],
     pokemons: [],
     types: []
 }
@@ -9,15 +11,20 @@ const stateInitial = {
 
 const reducer = ( state = stateInitial, { type, payload } ) => {
     switch(type){
+        case GET_ALL_POKE:
+            return {
+                ...state,
+                allPokemons: payload
+            }
         case CREATE_POKE:
             return {
                 ...state,
-                pokemons: [...state.pokemons, payload]
+                pokemons: payload
             }
         case GET_ALL_TYPES:
             return {
                 ...state,
-                types: [state.types, payload]
+                types: payload
             }
         default:
             return {...state}
