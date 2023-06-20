@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { createPokemons, getAllTypes } from '../../redux/actions';
+import { createPokemons, getAllPokemons, getAllTypes } from '../../redux/actions';
 import './CreatePokemon.css';
 
 function CreatePokemon() {
@@ -78,8 +78,17 @@ function CreatePokemon() {
     e.preventDefault();
     // Validar el campo 'numbers'
     dispatch(createPokemons(newPokemon));
-    navigate('/');
+    navigate('/home');
   };
+
+
+  const validateName = () => {
+    // const name = dispatch(getAllPokemons)
+
+    // const namePoke = newPokemon.name;
+
+    // const nameValidate = namePoke !==
+  }
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -223,9 +232,12 @@ function CreatePokemon() {
             }
           </div>
           
-          {error && <p>{error}</p>}
+          {error && <p style={{color: 'red'}}>{error}</p>}
 
-          <div className='ctn-button'>
+          <div 
+            className='ctn-button'
+            disabled={error === true}
+          >
             <button type="submit" className='btn-landing'><span>Create</span><i></i></button>
           </div>
         </form>
